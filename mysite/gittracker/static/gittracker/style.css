@@ -1,0 +1,13 @@
+.glyphicon-remove {
+	font-size: 1.5em;
+	color: #e74c3c;
+}
+
+.glyphicon-ok {
+	font-size: 1.5em;
+	color: #2ecc71;
+}
+
+body h1, footer h4 {
+	color: #34495E;
+}

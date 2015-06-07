@@ -1,0 +1,102 @@
+{%load staticfiles %}
+
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git Tracker</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'gittracker/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'gittracker/bootstrap.min.css' %}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+
+	<div class="container page-header">
+		<h1>Track those Git Files.</h1>
+	</div>
+	
+	<div class="container col-lg-6 col-lg-offset-1">
+
+		<table class="table">
+			<thead>
+				<td><h3>Availability</h3></td>
+				<td><h3>File Name</h3></td>
+				<td><h3>File Owner</h3></td>
+				<td><h3>Checkout Time</h3></td>
+			</thead>
+		{% if all_files %}
+		    
+			    {% for a_file in all_files|dictsort:"time_inserted" %}
+				<tr>
+					{% if a_file.checked_out %}
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+					{% else %}
+						<td><span class="glyphicon glyphicon-ok"></span></td>
+					{% endif %}
+
+					<td><div class="filename_box"> {{a_file.name}} </div></td>
+					<td><div class="renter_box"> {{a_file.owner}} </div></td>
+					<td><div class="time_stamp">{{a_file.time_inserted }} </div></td>
+				
+			
+				</tr>
+		    {% endfor %}
+		    </ul>
+		{% else %}
+		    <p>No files are in the repo</p>
+		{% endif %}
+		</table>
+	</div>
+
+	<div class="container col-lg-3 col-lg-offset-1">
+
+		<form action="rent/" method="post">
+			{% csrf_token %}
+			
+			<h3>Rent a file from the list. <small>If no one else has the file, this box allows you to place a lock on the file until you return it.</small></h3>
+			{{ rentform }}	
+			
+			<button type="submit" class="btn btn-default">Rent</button>
+		</form>
+
+		<form action="return/" method="post">
+	        {% csrf_token %}
+
+	        <h3>Return a file from the list. <small>If you already have a lock on the file, this box allows you to reliquish your lock on that file.</small></h3>
+	        {{ returnform }}
+
+			<button type="submit" class="btn btn-default">Return</button>
+		</form>
+
+		<form action="add/" method="post">
+	        {% csrf_token %}
+
+	        <h3>Add a new file to the list. <small>If you made a new file in the repo, this box allows you to update the list and get a lock on the file until it is returned.</small></h3>
+	        {{ addform }}
+
+	        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
+		</form>
+
+		<!--
+		<form method="post">
+		        {% csrf_token %}
+			Return a File <br />
+
+		        {{form}}
+					<input type="submit" value="Return"/> <br />
+		</form>
+		-->
+	</div>
+
+	<footer class="container text-right">
+		<hr>
+		<h4>Brought to you by JC. Styled by JS.</h4>
+	</footer>
+
+</body>
+</html>
+
+
+
